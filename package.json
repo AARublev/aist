@@ -9,6 +9,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@fontsource-variable/comfortaa": "^5.2.8",
+    "@fontsource-variable/manrope": "^5.2.8",
+    "@base-ui/react": "^1.6.0",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "1.2.12",
     "@radix-ui/react-alert-dialog": "1.1.15",

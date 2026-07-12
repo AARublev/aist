@@ -1,20 +1,9 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Comfortaa, Manrope } from 'next/font/google'
+import '@fontsource-variable/comfortaa'
+import '@fontsource-variable/manrope'
 import Script from 'next/script'
 import './globals.css'
-
-const comfortaa = Comfortaa({
-  subsets: ['latin', 'cyrillic'],
-  variable: '--font-comfortaa',
-  display: 'swap',
-})
-
-const manrope = Manrope({
-  subsets: ['latin', 'cyrillic'],
-  variable: '--font-manrope',
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   title: 'Аист — организация выписок, гендер-пати и дней рождения',
@@ -35,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" className="bg-background">
-      <body className={`${manrope.variable} ${comfortaa.variable} font-sans antialiased`}>
+      <body className="font-sans antialiased">
         {process.env.NODE_ENV === 'production' && (
           <>
             <Script id="yandex-metrika" strategy="afterInteractive">
