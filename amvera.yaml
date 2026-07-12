@@ -1,17 +1,11 @@
 meta:
-  environment: node
+  environment: docker
   toolchain:
-    name: pnpm
-    version: "22"
+    name: docker
+    version: latest
 build:
+  dockerfile: Dockerfile
   skip: false
-  additionalCommands: pnpm run build
-  artifacts:
-    "*": /
 run:
-  scriptName: null
-  scriptArguments: null
-  nodeArguments: null
-  command: pnpm run start
   persistenceMount: /data
-  containerPort: "3000"
+  containerPort: 3000
