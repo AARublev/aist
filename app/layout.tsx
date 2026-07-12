@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   description:
     'Событийное агентство «Аист». Создаём волшебные праздники под ключ: выписка из роддома, гендер-пати и дни рождения. Комплексный подход, декор, съёмка и незабываемые эмоции.',
   generator: 'v0.app',
+  verification: {
+    yandex: 'e0700d226245d427',
+  },
 }
 
 export const viewport: Viewport = {
@@ -56,3 +59,4 @@ export default function RootLayout({
     </html>
   )
 }
+
