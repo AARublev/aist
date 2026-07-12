@@ -1,0 +1,191 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+/* Аист — pastel event theme */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-comfortaa), ui-sans-serif, system-ui, sans-serif;
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  --color-sky: var(--sky);
+  --color-blush: var(--blush);
+  --color-rose: var(--rose);
+  --color-mint: var(--mint);
+  --color-gold: var(--gold);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  color-scheme: light;
+  --background: oklch(0.98 0.014 235);
+  --foreground: oklch(0.34 0.045 262);
+  --card: oklch(0.995 0.005 235);
+  --card-foreground: oklch(0.34 0.045 262);
+  --popover: oklch(0.995 0.005 235);
+  --popover-foreground: oklch(0.34 0.045 262);
+  --primary: oklch(0.7 0.13 236);
+  --primary-foreground: oklch(0.99 0.005 235);
+  --secondary: oklch(0.93 0.03 235);
+  --secondary-foreground: oklch(0.4 0.05 262);
+  --muted: oklch(0.95 0.015 235);
+  --muted-foreground: oklch(0.55 0.035 258);
+  --accent: oklch(0.83 0.09 15);
+  --accent-foreground: oklch(0.35 0.05 262);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0.02 235);
+  --input: oklch(0.9 0.02 235);
+  --ring: oklch(0.7 0.13 236);
+  --chart-1: oklch(0.7 0.13 236);
+  --chart-2: oklch(0.83 0.09 15);
+  --chart-3: oklch(0.85 0.08 155);
+  --chart-4: oklch(0.85 0.09 85);
+  --chart-5: oklch(0.6 0.1 300);
+  --radius: 1.1rem;
+
+  /* brand accents */
+  --sky: oklch(0.7 0.13 236);
+  --blush: oklch(0.82 0.1 8);
+  --rose: oklch(0.72 0.15 5);
+  --mint: oklch(0.85 0.08 158);
+  --gold: oklch(0.86 0.09 85);
+  --cloud: color-mix(in srgb, white 80%, transparent);
+
+  --sidebar: oklch(0.98 0.014 235);
+  --sidebar-foreground: oklch(0.34 0.045 262);
+  --sidebar-primary: oklch(0.7 0.13 236);
+  --sidebar-primary-foreground: oklch(0.99 0.005 235);
+  --sidebar-accent: oklch(0.93 0.03 235);
+  --sidebar-accent-foreground: oklch(0.4 0.05 262);
+  --sidebar-border: oklch(0.9 0.02 235);
+  --sidebar-ring: oklch(0.7 0.13 236);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply text-foreground;
+    background: linear-gradient(
+      175deg,
+      oklch(0.95 0.03 236) 0%,
+      oklch(0.96 0.02 300) 55%,
+      oklch(0.95 0.035 12) 100%
+    );
+    background-attachment: fixed;
+  }
+}
+
+@layer utilities {
+  @keyframes float-cloud {
+    0% {
+      transform: translateX(-8%);
+    }
+    100% {
+      transform: translateX(108%);
+    }
+  }
+  @keyframes bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-18px);
+    }
+  }
+  @keyframes bob-slow {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+      transform: translateY(-26px) rotate(2deg);
+    }
+  }
+  @keyframes sway {
+    0%,
+    100% {
+      transform: rotate(-3deg);
+    }
+    50% {
+      transform: rotate(3deg);
+    }
+  }
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.3;
+      transform: scale(0.85);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+  }
+
+  .animate-bob {
+    animation: bob 6s ease-in-out infinite;
+  }
+  .animate-bob-slow {
+    animation: bob-slow 9s ease-in-out infinite;
+  }
+  .animate-sway {
+    animation: sway 7s ease-in-out infinite;
+    transform-origin: top center;
+  }
+  .animate-twinkle {
+    animation: twinkle 3s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-bob,
+    .animate-bob-slow,
+    .animate-sway,
+    .animate-twinkle {
+      animation: none;
+    }
+  }
+}
