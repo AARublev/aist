@@ -14,8 +14,8 @@ const NAV = [
   { label: 'Отзывы', href: '#reviews' },
 ]
 
-const PHONE_DISPLAY = '+7 (495) 777-77-77'
-const PHONE_HREF = 'tel:+74957777777'
+const PHONE_DISPLAY = '+7 (904) 000-34-58'
+const PHONE_HREF = 'tel:+79040003458'
 
 export function SiteHeader() {
   const pathname = usePathname()

@@ -124,10 +124,10 @@ export function ContactSection() {
           <div className="mt-8 space-y-3 text-primary-foreground/90">
 
             <a
-              href="tel:+74957777777"
+              href="tel:+79040003458"
               className="block text-2xl font-semibold hover:underline"
             >
-              +7 (495) 777-77-77
+              +7 (904) 000-34-58
             </a>
 
 

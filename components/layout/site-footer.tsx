@@ -82,10 +82,10 @@ export function SiteFooter() {
 
 
             <a
-              href="tel:+74957777777"
+              href="tel:+79040003458"
               className="text-muted-foreground transition-colors hover:text-primary"
             >
-              +7 (495) 777-77-77
+              +7 (904) 000-34-58
             </a>
 
 

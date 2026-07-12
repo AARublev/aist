@@ -297,8 +297,8 @@ export default function MaternityLandingPage() {
               {error && (
                 <p className="rounded-2xl bg-destructive/10 px-4 py-3 text-center text-sm text-destructive">
                   Не удалось отправить заявку. Позвоните нам:{' '}
-                  <a href="tel:+74957777777" className="underline">
-                    +7 (495) 777-77-77
+                  <a href="tel:+79040003458" className="underline">
+                    +7 (904) 000-34-58
                   </a>
                 </p>
               )}
