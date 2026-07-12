@@ -3,11 +3,9 @@ meta:
   toolchain:
     name: docker
     version: latest
-
 build:
   dockerfile: Dockerfile
   skip: false
-
 run:
   persistenceMount: /data
   containerPort: 3000
