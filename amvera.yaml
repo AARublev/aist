@@ -1,17 +1,12 @@
 meta:
-  environment: nodejs
+  environment: node
   toolchain:
     name: pnpm
-    version: "20"
+    version: 22
+
 build:
-  skip: false
   additionalCommands: pnpm run build
-  artifacts:
-    "*": /
+
 run:
-  scriptName: null
-  scriptArguments: null
-  nodeArguments: null
-  command: pnpm run dev
-  persistenceMount: /data
-  containerPort: "3000"
+  command: pnpm run start
+  containerPort: 3000
