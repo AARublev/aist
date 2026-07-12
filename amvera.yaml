@@ -1,11 +1,11 @@
 meta:
   environment: node
   toolchain:
-    name: npm
-    version: "18"
+    name: pnpm
+    version: "22"
 build:
   skip: false
-  additionalCommands: null
+  additionalCommands: pnpm run build
   artifacts:
     "*": /
 run:
