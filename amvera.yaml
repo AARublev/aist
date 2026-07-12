@@ -1,12 +1,17 @@
 meta:
   environment: node
   toolchain:
-    name: pnpm
-    version: 22
-
+    name: npm
+    version: "18"
 build:
-  additionalCommands: pnpm run build
-
+  skip: false
+  additionalCommands: null
+  artifacts:
+    "*": /
 run:
+  scriptName: null
+  scriptArguments: null
+  nodeArguments: null
   command: pnpm run start
-  containerPort: 3000
+  persistenceMount: /data
+  containerPort: "3000"
