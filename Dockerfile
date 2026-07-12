@@ -1,21 +1,19 @@
-# Dependencies
-node_modules/
+FROM node:22-slim
 
-# Next.js build
-.next/
-out/
+RUN npm install -g pnpm
 
-# Environment variables (секреты — не пушим!)
-.env.local
-.env*.local
+WORKDIR /app
 
-# Auto-generated
-next-env.d.ts
+COPY package.json pnpm-lock.yaml ./
 
-# OS
-.DS_Store
-Thumbs.db
+RUN pnpm install --ignore-scripts
+RUN pnpm approve-builds --yes
+RUN pnpm install
 
-# Logs
-*.log
-npm-debug.log*
+COPY . .
+
+RUN pnpm build
+
+EXPOSE 3000
+
+CMD ["pnpm", "start"]
