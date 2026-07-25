@@ -78,6 +78,7 @@ export default function MaternityLandingPage() {
       })
       if (!res.ok) throw new Error('request failed')
       setSent(true)
+      window.ym?.(110619987, 'reachGoal', 'maternity_submit')
     } catch {
       setError(true)
     } finally {

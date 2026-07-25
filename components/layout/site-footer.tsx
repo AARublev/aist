@@ -83,6 +83,7 @@ export function SiteFooter() {
 
             <a
               href="tel:+79040003458"
+              onClick={() => window.ym?.(110619987, 'reachGoal', 'phone_click')}
               className="text-muted-foreground transition-colors hover:text-primary"
             >
               +7 (904) 000-34-58

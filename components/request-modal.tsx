@@ -107,6 +107,7 @@ export function RequestModal({
       })
       if (!res.ok) throw new Error('request failed')
       setSent(true)
+      window.ym?.(110619987, 'reachGoal', 'request_submit')
     } catch {
       setError(true)
     } finally {

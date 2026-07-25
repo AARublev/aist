@@ -53,6 +53,7 @@ export function ContactSection() {
       })
       if (!res.ok) throw new Error('request failed')
       setSent(true)
+      window.ym?.(110619987, 'reachGoal', 'contact_submit')
     } catch {
       setError(true)
     } finally {

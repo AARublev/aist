@@ -99,6 +99,7 @@ export function ServiceModal({
       }
 
       setSent(true)
+      window.ym?.(110619987, 'reachGoal', 'service_submit')
     } catch {
       setError(true)
     } finally {
