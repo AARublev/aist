@@ -5,7 +5,10 @@ import '@fontsource-variable/manrope'
 import Script from 'next/script'
 import './globals.css'
 
+const SITE_URL = 'https://aist.life'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'Аист — организация выписок, гендер-пати и дней рождения',
   description:
     'Событийное агентство «Аист». Создаём волшебные праздники под ключ: выписка из роддома, гендер-пати и дни рождения. Комплексный подход, декор, съёмка и незабываемые эмоции.',
@@ -13,11 +16,53 @@ export const metadata: Metadata = {
   verification: {
     yandex: 'b54cad29198e8dd2',
   },
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Аист — организация выписок, гендер-пати и дней рождения',
+    description:
+      'Создаём волшебные праздники под ключ: выписка из роддома, гендер-пати и дни рождения.',
+    url: SITE_URL,
+    siteName: 'Аист',
+    images: [
+      {
+        url: '/images/hero-celebration.png',
+        width: 1200,
+        height: 630,
+        alt: 'Аист — событийное агентство',
+      },
+    ],
+    locale: 'ru_RU',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Аист — организация выписок, гендер-пати и дней рождения',
+    description:
+      'Создаём волшебные праздники под ключ: выписка из роддома, гендер-пати и дни рождения.',
+    images: ['/images/hero-celebration.png'],
+  },
 }
 
 export const viewport: Viewport = {
   colorScheme: 'light',
   themeColor: '#eaf3fb',
+}
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'Аист',
+  description:
+    'Событийное агентство: организация выписок из роддома, гендер-пати и дней рождения.',
+  url: SITE_URL,
+  image: `${SITE_URL}/images/hero-celebration.png`,
+  priceRange: 'от 15 000 ₽',
+  areaServed: {
+    '@type': 'City',
+    name: 'Москва',
+  },
 }
 
 export default function RootLayout({
@@ -28,6 +73,12 @@ export default function RootLayout({
   return (
     <html lang="ru" className="bg-background">
       <body className="font-sans antialiased">
+        <Script
+          id="org-jsonld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+
         {process.env.NODE_ENV === 'production' && (
           <>
             <Script id="yandex-metrika" strategy="afterInteractive">
@@ -59,4 +110,3 @@ export default function RootLayout({
     </html>
   )
 }
-

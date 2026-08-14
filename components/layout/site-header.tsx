@@ -9,6 +9,7 @@ import { CallbackModal } from '@/components/callback-modal'
 const NAV = [
   { label: 'Праздники', href: '#services' },
   { label: 'Услуги', href: '#all-services' },
+  { label: 'Оформление', href: '/dekoratsii-i-oformlenie' },
   { label: 'Как мы работаем', href: '#process' },
   { label: 'Галерея', href: '#gallery' },
   { label: 'Отзывы', href: '#reviews' },
@@ -16,6 +17,12 @@ const NAV = [
 
 const PHONE_DISPLAY = '+7 (904) 000-34-58'
 const PHONE_HREF = 'tel:+79040003458'
+
+// Pages whose hero sits on a dark background (video/photo + gradient) —
+// the header needs solid white text here instead of the usual muted gray,
+// but only until the user scrolls (at which point the header gets its own
+// opaque bg-card pill and reverts to normal colors for contrast).
+const DARK_HERO_PATHS = ['/dekoratsii-i-oformlenie']
 
 export function SiteHeader() {
   const pathname = usePathname()
@@ -25,8 +32,11 @@ export function SiteHeader() {
   const [callbackOpen, setCallbackOpen] = useState(false)
 
   const navHref = (href: string) => {
+    if (!href.startsWith('#')) return href
     return pathname === '/' ? href : `/${href}`
   }
+
+  const onDarkHero = DARK_HERO_PATHS.includes(pathname) && !scrolled
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -77,10 +87,15 @@ export function SiteHeader() {
             className="flex items-center gap-2"
           >
             <span className="relative flex size-9 items-center justify-center">
-              <Stork className="w-9 text-primary" />
+              <Stork className={cn('w-9', onDarkHero ? 'text-white' : 'text-primary')} />
             </span>
 
-            <span className="font-display text-xl font-bold tracking-tight text-foreground">
+            <span
+              className={cn(
+                'font-display text-xl font-bold tracking-tight',
+                onDarkHero ? 'text-white' : 'text-foreground'
+              )}
+            >
               Аист
             </span>
           </a>
@@ -93,7 +108,12 @@ export function SiteHeader() {
               <a
                 key={item.href}
                 href={navHref(item.href)}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                className={cn(
+                  'text-sm font-medium transition-colors',
+                  onDarkHero
+                    ? 'text-white hover:text-white/80'
+                    : 'text-muted-foreground hover:text-primary'
+                )}
               >
                 {item.label}
               </a>
@@ -108,7 +128,10 @@ export function SiteHeader() {
 
             <a
               href={PHONE_HREF}
-              className="inline-block origin-center text-lg font-extrabold tracking-tight text-rose-600 transition-opacity hover:opacity-80"
+              className={cn(
+                'inline-block origin-center text-lg font-extrabold tracking-tight transition-opacity hover:opacity-80',
+                onDarkHero ? 'text-white' : 'text-rose-600'
+              )}
               style={{
                 animation: 'phone-pulse 1.8s ease-in-out infinite'
               }}
@@ -120,7 +143,12 @@ export function SiteHeader() {
             <button
               type="button"
               onClick={() => setCallbackOpen(true)}
-              className="inline-flex rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md transition-transform hover:scale-105"
+              className={cn(
+                'inline-flex rounded-full px-5 py-2.5 text-sm font-semibold shadow-md transition-transform hover:scale-105',
+                onDarkHero
+                  ? 'bg-white text-primary'
+                  : 'bg-primary text-primary-foreground'
+              )}
             >
               Обратный звонок
             </button>
@@ -139,17 +167,17 @@ export function SiteHeader() {
             <span className={cn(
               'h-0.5 w-5 bg-foreground transition-all',
               open && 'translate-y-2 rotate-45'
-            )}/>
+            )} />
 
             <span className={cn(
               'h-0.5 w-5 bg-foreground transition-all',
               open && 'opacity-0'
-            )}/>
+            )} />
 
             <span className={cn(
               'h-0.5 w-5 bg-foreground transition-all',
               open && '-translate-y-2 -rotate-45'
-            )}/>
+            )} />
 
           </button>
 
@@ -163,12 +191,12 @@ export function SiteHeader() {
 
             <nav className="flex flex-col gap-1">
 
-              {NAV.map((item)=>(
+              {NAV.map((item) => (
 
                 <a
                   key={item.href}
                   href={navHref(item.href)}
-                  onClick={()=>setOpen(false)}
+                  onClick={() => setOpen(false)}
                   className="rounded-2xl px-4 py-3 text-base font-medium text-foreground hover:bg-secondary"
                 >
                   {item.label}
@@ -186,7 +214,7 @@ export function SiteHeader() {
 
 
               <button
-                onClick={()=>{
+                onClick={() => {
                   setOpen(false)
                   setCallbackOpen(true)
                 }}
@@ -207,7 +235,7 @@ export function SiteHeader() {
 
       <CallbackModal
         open={callbackOpen}
-        onClose={()=>setCallbackOpen(false)}
+        onClose={() => setCallbackOpen(false)}
       />
 
     </header>

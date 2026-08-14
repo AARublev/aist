@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { Cake, Calendar, Phone, Sparkles, Wallet, X } from 'lucide-react'
 import { Balloon, ConfettiField, DriftingCloud } from '@/components/decor'
@@ -89,6 +90,8 @@ export function RequestModal({
 
 
   if (!open) return null
+  if (!open) return null
+  if (typeof document === 'undefined') return null
 
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -117,7 +120,7 @@ export function RequestModal({
 
 
 
-  return (
+  return createPortal(
 
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
 
@@ -430,7 +433,8 @@ export function RequestModal({
       </div>
 
 
-    </div>
+    </div>,
+    document.body,
 
   )
 }

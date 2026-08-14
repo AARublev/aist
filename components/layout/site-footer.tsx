@@ -68,6 +68,14 @@ export function SiteFooter() {
             </a>
 
 
+            <Link
+              href="/dekoratsii-i-oformlenie"
+              className="text-muted-foreground transition-colors hover:text-primary"
+            >
+              Оформление
+            </Link>
+
+
           </nav>
 
 

@@ -115,7 +115,7 @@ export function ServicesSection() {
                   onClick={() => setSelectedService(s)}
                   className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors hover:text-accent-foreground"
                 >
-                  Расчитать стоимость
+                  Рассчитать стоимость
                   <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">
                     →
                   </span>
