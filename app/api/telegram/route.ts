@@ -42,6 +42,13 @@ type MaternityPayload = {
   phone: string
 }
 
+type VypiskaPayload = {
+  kind: 'moniiag-vypiska'
+  name?: string
+  phone: string
+  video?: string
+  source?: string
+}
 
 type Payload =
   | CallbackPayload
@@ -49,6 +56,7 @@ type Payload =
   | ServicePayload
   | ContactPayload
   | MaternityPayload
+  | VypiskaPayload
 
 
 
@@ -207,7 +215,7 @@ export async function POST(request: Request) {
     case 'maternity':
 
       text = [
-        '👶 <b>Заявка из роддома (QR)</b>',
+        '👶 <b>Заявка из роддома (Мониторы & рекламные буклеты)</b>',
         '',
 
         payload.occasion
@@ -239,7 +247,18 @@ export async function POST(request: Request) {
 
       break
 
-
+    case 'moniiag-vypiska':
+      text = [
+        '🍼 <b>Заявка из палат роддома (рекламные-буклеты & видео-воронка)</b>',
+        '',
+        payload.name ? `Имя: ${escapeHtml(payload.name)}` : null,
+        `Телефон: ${escapeHtml(payload.phone)}`,
+        payload.video ? `Видео при заходе: ${escapeHtml(payload.video)}` : null,
+        payload.source ? `Источник (QR): ${escapeHtml(payload.source)}` : null,
+      ]
+        .filter(Boolean)
+        .join('\n')
+      break
 
 
     default:
@@ -249,7 +268,7 @@ export async function POST(request: Request) {
           error: 'Unknown kind'
         },
         {
-          status:400
+          status: 400
         }
       )
 
@@ -275,23 +294,23 @@ export async function POST(request: Request) {
 
       {
 
-        method:'POST',
+        method: 'POST',
 
-        headers:{
-          'Content-Type':'application/json'
+        headers: {
+          'Content-Type': 'application/json'
         },
 
-        body:JSON.stringify({
+        body: JSON.stringify({
 
-          chat_id:chatId,
+          chat_id: chatId,
 
           text,
 
-          parse_mode:'HTML'
+          parse_mode: 'HTML'
 
         }),
 
-        signal:controller.signal
+        signal: controller.signal
 
       }
 
@@ -317,11 +336,11 @@ export async function POST(request: Request) {
       return NextResponse.json(
 
         {
-          error:errorText
+          error: errorText
         },
 
         {
-          status:502
+          status: 502
         }
 
       )
@@ -333,13 +352,13 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
 
-      ok:true
+      ok: true
 
     })
 
 
 
-  } catch(error:any) {
+  } catch (error: any) {
 
 
     console.error(
@@ -351,11 +370,11 @@ export async function POST(request: Request) {
     return NextResponse.json(
 
       {
-        error:'Telegram connection failed'
+        error: 'Telegram connection failed'
       },
 
       {
-        status:500
+        status: 500
       }
 
     )
@@ -367,11 +386,11 @@ export async function POST(request: Request) {
 
 
 
-function escapeHtml(value:string) {
+function escapeHtml(value: string) {
 
   return value
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
 
 }
