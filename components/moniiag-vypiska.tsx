@@ -25,19 +25,19 @@ const VIDEO_META: Record<
     promo: {
         heading: 'Выписка бывает один раз.\nСделайте её незабываемой',
         //subtitle: 'Посмотрите, как «Аист» превращает обычную выписку в красивое семейное событие.',
-        firstVideo: '/videos/vypiska-promo.mp4',
+        firstVideo: 'https://storage.yandexcloud.net/aist-event/vypiska-promo.mp4',
         firstPoster: '/images/vypiska-promo-poster.jpg',
         secondCaption: 'Понравилось? Посмотрите настоящую выписку, которую мы организовали для семьи',
-        secondVideo: '/videos/vypiska-real.mp4',
+        secondVideo: 'https://storage.yandexcloud.net/aist-event/vypiska-real.mp4',
         secondPoster: '/images/vypiska-real-poster.jpg',
     },
     real: {
         heading: 'Так выглядит момент,\nкоторый хочется помнить всегда',
         //subtitle: 'Реальный пример нашей работы.',
-        firstVideo: '/videos/vypiska-real.mp4',
+        firstVideo: 'https://storage.yandexcloud.net/aist-event/vypiska-real.mp4',
         firstPoster: '/images/vypiska-real-poster.jpg',
         secondCaption: 'А теперь посмотрите, как ещё можно оформить этот день',
-        secondVideo: '/videos/vypiska-promo.mp4',
+        secondVideo: 'https://storage.yandexcloud.net/aist-event/vypiska-promo.mp4',
         secondPoster: '/images/vypiska-promo-poster.jpg',
     },
 }
