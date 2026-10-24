@@ -16,6 +16,18 @@ const nextConfig = {
       { protocol: "https", hostname: "plus.unsplash.com" },
     ],
   },
+
+  
+async redirects() {
+  return [
+    {
+      source: '/dekoratsii-i-oformlenie/:slug',
+      destination: '/fotozony/:slug',
+      permanent: true,
+    },
+  ]
+},
+
 }
 
 export default nextConfig

@@ -22,7 +22,11 @@ const PHONE_HREF = 'tel:+79040003458'
 // the header needs solid white text here instead of the usual muted gray,
 // but only until the user scrolls (at which point the header gets its own
 // opaque bg-card pill and reverts to normal colors for contrast).
-const DARK_HERO_PATHS = ['/dekoratsii-i-oformlenie']
+const DARK_HERO_PATHS = [
+  '/dekoratsii-i-oformlenie',
+  '/fotozony',
+  '/shary',
+]
 
 export function SiteHeader() {
   const pathname = usePathname()

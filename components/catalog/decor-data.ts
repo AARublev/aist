@@ -1,42 +1,38 @@
 export type DecorCategory = 'baby' | 'gender' | 'birthday' | 'christening' | 'other'
 
-// Once you start re-coloring photozones via GPT, tag each recolored variant
-// with `colorVariant` and give siblings the same `variantGroup` (e.g. all
-// three colors of "Teddy" share variantGroup: 'teddy'). Neither field is
-// required — items without them behave exactly as before (no swatches shown).
 export type ColorVariant = 'boy' | 'girl' | 'neutral'
+
+/** Тип товара в каталоге. Для старых записей отсутствие поля означает фотозону. */
+export type DecorProductType = 'photozone' | 'balloons'
 
 export type DecorItem = {
   id: number
   slug: string
-
   title: string
   subtitle: string
   description: string
-
-  // A single photozone can now belong to several occasions at once —
-  // e.g. categories: ['baby', 'birthday'] shows it under both filters.
   categories: DecorCategory[]
-
   image: string
-
   priceFrom: number
-
   colors: string[]
-
+  gender?: ('boy' | 'girl')[]
   tags: string[]
-
   width: number
   height: number
-
   premium: boolean
   popular: boolean
   new: boolean
-
   colorVariant?: ColorVariant
   variantGroup?: string
+
+  /** Новые поля необязательны, поэтому старые фотозоны остаются совместимыми. */
+  productType?: DecorProductType
+  quantity?: number
+  composition?: string
+  size?: string
 }
 
+/** Существующие фотозоны. Их данные сохранены без изменения. */
 export const DECOR_ITEMS: DecorItem[] = [
   {
     id: 1,
@@ -312,6 +308,320 @@ export const DECOR_ITEMS: DecorItem[] = [
   },
 ]
 
+export const BALLOON_ITEMS: DecorItem[] = [
+  {
+    id: 101,
+    slug: 'zolotaya-skazka',
+    productType: 'balloons',
+    title: 'Золотая сказка',
+    subtitle: 'Шарики на выписку из роддома',
+    description: 'Элегантная композиция из воздушных шаров в нежных оттенках шалфейного, кремового и золота. Детские мотивы и изящные детали создают атмосферу для встречи малыша и станут прекрасным подарком',
+    categories: ['birthday', 'baby'],
+    image: '/shary/zolotaya-skazka.png',
+    priceFrom: 8300,
+    colors: ['шалфейный', 'кремовый', 'золотой'],
+    gender: ['boy', 'girl'],
+    tags: ['любой повод', 'фонтан'],
+    quantity: 11,
+    //composition: 'Воздушные шары в оттенках шалфейного, кремового и золота; декоративные шары с детскими мотивами; тематические фигурные элементы',
+    size: 'около 1,5 м',
+    width: 0,
+    height: 0,
+    premium: false,
+    popular: true,
+    new: true,
+  },
+  {
+    id: 102,
+    slug: 'nezhnaya-printsessa',
+    productType: 'balloons',
+    title: 'Нежная принцесса',
+    subtitle: 'Шарики на выписку из роддома',
+    description: 'Нежная композиция в розовых и молочных оттенках для красивой встречи малышки из роддома',
+    categories: ['birthday', 'baby'],
+    image: '/shary/nezhnaya-printsessa.png',
+    priceFrom: 9800,
+    colors: ['розовый', 'молочный', 'прозрачный'],
+    tags: ['в потолок', 'бантик', 'девочка'],
+    gender: ['girl'],
+    quantity: 17,
+    //composition: 'Розовые и молочные латексные шары, прозрачные шары с декоративными элементами, фольгированный бантик',
+    size: 'около 2,4 м',
+    width: 0,
+    height: 0,
+    premium: false,
+    popular: false,
+    new: true,
+  },
+  {
+    id: 103,
+    slug: 'nezhnoe-oblachko',
+    productType: 'balloons',
+    title: 'Нежное облачко',
+    subtitle: 'Шарики на выписку из роддома',
+    description: 'Воздушная композиция с нежным облачком, прозрачным шаром и золотыми акцентам',
+    categories: ['birthday', 'baby'],
+    image: '/shary/nezhnoe-oblachko.png',
+    priceFrom: 9500,
+    colors: ['любой повод', 'сердце', 'бамбл'],
+    tags: ['шары', 'день рождения', 'выписка'],
+    gender: ['boy', 'girl'],
+    quantity: 17,
+    //composition: 'Фольгированное облачко, прозрачный шар, золотые воздушные шары',
+    size: 'композиция около 1,5 м',
+    width: 0,
+    height: 0,
+    premium: true,
+    popular: true,
+    new: false,
+  },
+  {
+    id: 104,
+    slug: 'lesnaya-nezhnost',
+    productType: 'balloons',
+    title: 'Лесная нежность',
+    subtitle: 'Шарики на выписку из роддома',
+    description: 'Спокойное сочетание цветов создаёт уютное настроение и подходит для рождения малыша',
+    categories: ['birthday', 'baby'],
+    image: '/shary/lesnaya-nezhnost.png',
+    priceFrom: 7500,
+    colors: ['зелёный', 'золотой', 'бежевый'],
+    tags: ['фонтан', 'любой повод', 'в потолок'],
+    gender: ['boy', 'girl'],
+    quantity: 27,
+    //composition: 'Воздушные шары зелёных и бежевых оттенков разных размеров',
+    size: 'высота около 1,8 м',
+    width: 0,
+    height: 0,
+    premium: false,
+    popular: true,
+    new: false,
+  },
+  {
+    id: 105,
+    slug: 'medvezhonok-v-zolote',
+    productType: 'balloons',
+    title: 'Медвежонок в золоте',
+    subtitle: 'Шарики на выписку из роддома',
+    description: 'Элегантная композиция с милым бежевым мишкой и золотистыми шарами. Тёплая палитра делает её прекрасным подарком на выписку из роддома или первый праздник малыша',
+    categories: ['birthday', 'baby'],
+    image: '/shary/medvezhonok-v-zolote.png',
+    priceFrom: 6200,
+    colors: ['золотой', 'бежевый', 'песочный'],
+    tags: ['мишка', 'любой повод'],
+    gender: ['boy', 'girl'],
+    quantity: 11,
+    //composition: 'Большой прозрачный шар с наполнением',
+    size: 'высота около 1,5 м',
+    width: 0,
+    height: 0,
+    premium: false,
+    popular: false,
+    new: true,
+  },
+  {
+    id: 106,
+    slug: 'malenkiy-lev',
+    productType: 'balloons',
+    title: 'Маленький лев',
+    subtitle: 'Шарики на выписку из роддома',
+    description: 'Яркая композиция с золотыми и голубыми шарами и забавным рыжим львёнком. Прекрасный вариант для детского дня рождения',
+    categories: ['birthday', 'baby'],
+    image: '/shary/malenkiy-lev.png',
+    priceFrom: 12800,
+    colors: ['золотой', 'голубой', 'рыжий'],
+    tags: ['лев', 'день рождения', 'выписка', 'в потолок'],
+    gender: ['boy'],
+    quantity: 27,
+    //composition: 'Фигурный шар в виде рыжего льва, золотые и голубые воздушные',
+    size: 'примерно 2,5 × 2 м',
+    width: 0,
+    height: 0,
+    premium: true,
+    popular: true,
+    new: false,
+  },
+  {
+    id: 107,
+    slug: 'slonyonok-v-oblakakh',
+    productType: 'balloons',
+    title: 'Слонёнок в облаках',
+    subtitle: 'Шарики на выписку из роддома',
+    description: 'Очаровательная композиция с фигуркой слонёнка и шарами в хромированных оттенках',
+    categories: ['birthday', 'baby'],
+    image: '/shary/slonyonok-v-oblakakh.png',
+    priceFrom: 5300,
+    colors: ['синий', 'прозрачный', 'серебряный', 'хром'],
+    tags: ['слоненок', 'день рождения', 'выписка'],
+    gender: ['boy', 'girl'],
+    quantity: 9,
+    //composition: 'Фигурный шар в виде слона, синие воздушные шары, шары с хромированным эффектом',
+    size: 'примерно 1,8 м',
+    width: 0,
+    height: 0,
+    premium: true,
+    popular: true,
+    new: false,
+  },
+  {
+    id: 108,
+    slug: 'olivkovaya-kolybel',
+    productType: 'balloons',
+    title: 'Оливковая колыбель',
+    subtitle: 'Шарики на выписку из роддома',
+    description: 'Утончённая композиция в оливковых и молочно-белых оттенках с детской коляской',
+    categories: ['birthday', 'baby'],
+    image: '/shary/olivkovaya-kolybel.png',
+    priceFrom: 6900,
+    colors: ['оливковый', 'белый', 'молочный'],
+    tags: ['коляска', 'фонтан', 'выписка'],
+    gender: ['boy', 'girl'],
+    quantity: 9,
+    //composition: 'Декоративная фигурка или шар в виде детской коляски, оливковые и белые воздушные шары',
+    size: 'Высота примерно 1,5 м',
+    width: 0,
+    height: 0,
+    premium: true,
+    popular: true,
+    new: false,
+  },
+  {
+    id: 109,
+    slug: 'zolotye-priznaniya',
+    productType: 'balloons',
+    title: 'Золотые признания',
+    subtitle: 'Шарики на выписку из роддома',
+    description: 'Композиция с розовыми сердцами, выразительным бантом и золотыми акцентами',
+    categories: ['birthday', 'baby'],
+    image: '/shary/zolotye-priznaniya.png',
+    priceFrom: 7700,
+    colors: ['розовый', 'пудровый', 'золотой'],
+    tags: ['бантик', 'сердечки', 'выписка', 'день рождения'],
+    gender: ['girl'],
+    quantity: 11,
+    //composition: 'Розовые шары-сердца, большой розовый декоративный бант, золотые фольгированные сердца',
+    size: 'Высота примерно 1,5 м',
+    width: 0,
+    height: 0,
+    premium: true,
+    popular: true,
+    new: false,
+  },
+  {
+    id: 110,
+    slug: 'lunnyy-zaychik',
+    productType: 'balloons',
+    title: 'Лунный зайчик',
+    subtitle: 'Шарики на выписку из роддома',
+    description: 'Нежная белоснежная композиция с пушистым облачком, серебряным месяцем и милым зайчиком',
+    categories: ['birthday', 'baby'],
+    image: '/shary/lunnyy-zaychik.png',
+    priceFrom: 5900,
+    colors: ['белый', 'серебряный', 'молочный'],
+    tags: ['месяц', 'облачко' , 'зайчик', 'любой повод'],
+    gender: ['boy', 'girl'],
+    quantity: 9,
+    //composition: 'Белое облачко, серебряный месяц, фигурный шар в виде зайца, белые воздушные шары',
+    size: 'Высота примерно 1,8 м',
+    width: 0,
+    height: 0,
+    premium: true,
+    popular: true,
+    new: false,
+  },
+  {
+    id: 111,
+    slug: 'mesyats-v-oblakakh',
+    productType: 'balloons',
+    title: 'Месяц в облаках',
+    subtitle: 'Шарики на выписку из роддома',
+    description: 'Мечтательная композиция в голубых и бежевых оттенках с месяцем и голубым облачком. Идеальный акцент для оформления комнаты малыша',
+    categories: ['birthday', 'baby'],
+    image: '/shary/mesyats-v-oblakakh.png',
+    priceFrom: 8100,
+    colors: ['голубой', 'бежевый', 'молочный'],
+    tags: ['фонтан', 'день рождения', 'выписка'],
+    gender: ['boy', 'girl'],
+    quantity: 12,
+    //composition: 'Фигурный шар в виде месяца, голубое облачко, голубые и бежевые воздушные шары',
+    size: 'Высота примерно 1,8 м',
+    width: 0,
+    height: 0,
+    premium: true,
+    popular: true,
+    new: false,
+  },
+  {
+    id: 112,
+    slug: 'mishka-v-obyatiyakh-nezhnosti',
+    productType: 'balloons',
+    title: 'Мишка в объятиях нежности',
+    subtitle: 'Шарики на выписку из роддома',
+    description: 'Уютная композиция в бежевых и прозрачных оттенках с очаровательным мишкой',
+    categories: ['birthday', 'baby'],
+    image: '/shary/mishka-v-obyatiyakh-nezhnosti.png',
+    priceFrom: 7700,
+    colors: ['бежевый', 'песочный', 'прозрачный'],
+    tags: ['мишка', 'фонтан', 'на любой повод'],
+    gender: ['boy', 'girl'],
+    quantity: 11,
+    //composition: 'Бежевые воздушные шары, прозрачные шары, фигурный шар в виде медведя',
+    size: 'Высота примерно 1,8 м',
+    width: 0,
+    height: 0,
+    premium: true,
+    popular: true,
+    new: false,
+  },
+  
+{
+  id: 113,
+  slug: 'dvoynoe-schastye',
+  productType: 'balloons',
+  title: 'Двойное счастье',
+  subtitle: 'Шары на выписку двойняшек из роддома',
+  description: 'Элегантная композиция в оттенках  шампань с прозрачными шарами, жемчужным декором и золотистыми сердцами',
+  categories: ['birthday', 'baby'],
+  image: '/shary/dvoynoe-schastye.png',
+  priceFrom: 7300,
+  colors: ['молочный', 'шампань', 'золотой', 'прозрачный'],
+  tags: ['фонтан', 'день рождения', 'выписка'],
+  gender: ['boy', 'girl'],
+  quantity: 9,
+  //composition: 'Молочные и бежевые латексные шары, большой прозрачный шар с белыми декоративными жемчужинами и персональной надписью, прозрачный шар с жемчужинами, фольгированные сердца цвета шампань, атласные ленты',
+  size: 'Высота композиции примерно 1,8 м',
+  width: 0,
+  height: 0,
+  premium: true,
+  popular: true,
+  new: false,
+},
+
+{
+  id: 114,
+  slug: 'nezhnoe-privetstvie',
+  productType: 'balloons',
+  title: 'Нежное приветствие',
+  subtitle: 'Шары на выписку новорождённых',
+  description: 'Нежная композиция в розовых, молочных и прозрачных оттенках для трогательной встречи малыша дома',
+  categories: ['birthday', 'baby'],
+  image: '/shary/nezhnoe-privetstvie.png',
+  priceFrom: 9500,
+  colors: ['розовый', 'молочный', 'прозрачный', 'золотой'],
+  tags: ['фонтан', 'коляска', 'выписка'],
+  gender: ['girl'],
+  quantity: 17,
+  //composition: 'Розовые и молочные шары, прозрачные шары с бантиками, большой шар с надписью и ножками, фольгированная коляска с цветочным принтом и золотистыми колёсами, ленты',
+  size: 'Высота композиции примерно 1,8 м',
+  width: 0,
+  height: 0,
+  premium: true,
+  popular: true,
+  new: false,
+},
+
+]
+
 export const CATEGORY_LABELS: Record<DecorCategory, string> = {
   baby: 'Выписка из роддома',
   gender: 'Гендер-пати',
@@ -326,16 +636,13 @@ export const COLOR_VARIANT_LABELS: Record<ColorVariant, string> = {
   neutral: 'Нейтральный',
 }
 
-// Solid swatch colors for the on-card color picker — one representative
-// hex per variant, independent of the free-text `colors` array.
+/** Цвета для переключателя цветовых вариантов фотозон. */
 export const COLOR_VARIANT_SWATCH: Record<ColorVariant, string> = {
   boy: '#7EB6E0',
   girl: '#F2A6C0',
   neutral: '#D8CBB0',
 }
 
-// Price brackets for the price filter — mirrors the pill-style budget
-// selectors already used elsewhere on the site (RequestModal).
 export type PriceRange = {
   id: string
   label: string

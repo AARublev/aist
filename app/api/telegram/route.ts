@@ -24,6 +24,14 @@ type ServicePayload = {
   phone: string
 }
 
+type BalloonsOrderPayload = {
+  kind: 'balloons-order'
+  product: string
+  date?: string
+  address: string
+  phone: string
+}
+
 
 type ContactPayload = {
   kind: 'contact'
@@ -57,6 +65,7 @@ type Payload =
   | ContactPayload
   | MaternityPayload
   | VypiskaPayload
+  | BalloonsOrderPayload
 
 
 
@@ -187,7 +196,24 @@ export async function POST(request: Request) {
       break
 
 
+    case 'balloons-order':
+      if (!payload.product?.trim() || !payload.address?.trim()) {
+        return NextResponse.json(
+          { error: 'Product and address required' },
+          { status: 400 },
+        )
+      }
 
+      text = [
+        '💰 <b>Заказ шариков</b>',
+        '',
+        `Товар: ${escapeHtml(payload.product)}`,
+        `Дата: ${escapeHtml(payload.date || 'Не указана')}`,
+        `Адрес: ${escapeHtml(payload.address)}`,
+        `Телефон: ${escapeHtml(payload.phone)}`,
+      ].join('\n')
+
+      break
 
     case 'contact':
 

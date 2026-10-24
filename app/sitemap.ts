@@ -1,5 +1,8 @@
 import type { MetadataRoute } from 'next'
-import { DECOR_ITEMS } from '@/components/catalog/decor-data'
+import {
+  DECOR_ITEMS,
+  BALLOON_ITEMS,
+} from '@/components/catalog/decor-data'
 
 const BASE_URL = 'https://aist.life'
 
@@ -15,6 +18,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${BASE_URL}/dekoratsii-i-oformlenie`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/fotozony`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/shary`,
       lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.9,
@@ -45,15 +60,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 
-  // Every individual photozone page, generated automatically from the
-  // catalog data — new items you add later will appear here on their own,
-  // no need to touch this file again.
-  const catalogPages: MetadataRoute.Sitemap = DECOR_ITEMS.map((item) => ({
-    url: `${BASE_URL}/dekoratsii-i-oformlenie/${item.slug}`,
+  const photozonePages: MetadataRoute.Sitemap = DECOR_ITEMS
+    .filter((item) => (item.productType ?? 'photozone') === 'photozone')
+    .map((item) => ({
+      url: `${BASE_URL}/fotozony/${item.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    }))
+
+  const balloonPages: MetadataRoute.Sitemap = BALLOON_ITEMS.map((item) => ({
+    url: `${BASE_URL}/shary/${item.slug}`,
     lastModified: now,
     changeFrequency: 'monthly',
     priority: 0.7,
   }))
 
-  return [...staticPages, ...catalogPages]
+  return [...staticPages, ...photozonePages, ...balloonPages]
 }

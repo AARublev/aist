@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Calendar, Phone, Sparkles, X } from 'lucide-react'
 import { Balloon, DriftingCloud } from '@/components/decor'
+import { createPortal } from 'react-dom'
 
 function formatPhone(value: string) {
   const digits = value.replace(/\D/g, '').replace(/^7/, '').slice(0, 10)
@@ -20,6 +21,7 @@ function formatPhone(value: string) {
 }
 
 type Service = {
+  kind?: 'balloons' | 'service'
   title: string
 }
 
@@ -39,35 +41,36 @@ export function ServiceModal({
   useEffect(() => {
     if (!open) return
 
-    const escape = (e: KeyboardEvent) => {
+    const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }
 
-    document.addEventListener('keydown', escape)
+    document.addEventListener('keydown', handleEscape)
 
-    const old = document.body.style.overflow
+    const oldOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
 
     return () => {
-      document.removeEventListener('keydown', escape)
-      document.body.style.overflow = old
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = oldOverflow
     }
   }, [open, onClose])
 
   useEffect(() => {
-    if (!open) {
-      const timer = setTimeout(() => {
-        setSent(false)
-        setError(false)
-      }, 200)
+    if (open) return
 
-      return () => clearTimeout(timer)
-    }
+    const timer = setTimeout(() => {
+      setSent(false)
+      setError(false)
+    }, 200)
+
+    return () => clearTimeout(timer)
   }, [open])
 
   if (!open || !service) return null
 
   const currentService = service
+  const isBalloonOrder = currentService.kind === 'balloons'
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -76,6 +79,7 @@ export function ServiceModal({
 
     const date = String(formData.get('date') ?? '')
     const phone = String(formData.get('phone') ?? '')
+    const address = String(formData.get('address') ?? '')
 
     setSending(true)
     setError(false)
@@ -86,16 +90,26 @@ export function ServiceModal({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          kind: 'service',
-          service: currentService.title,
-          date,
-          phone,
-        }),
+        body: JSON.stringify(
+          isBalloonOrder
+            ? {
+              kind: 'balloons-order',
+              product: currentService.title,
+              date,
+              address,
+              phone,
+            }
+            : {
+              kind: 'service',
+              service: currentService.title,
+              date,
+              phone,
+            },
+        ),
       })
 
       if (!res.ok) {
-        throw new Error('request failed')
+        throw new Error('Request failed')
       }
 
       setSent(true)
@@ -107,7 +121,7 @@ export function ServiceModal({
     }
   }
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <button
         type="button"
@@ -118,7 +132,6 @@ export function ServiceModal({
 
       <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-[2rem] bg-card shadow-2xl">
         <div className="relative bg-primary px-6 pb-8 pt-7 text-primary-foreground">
-
           <DriftingCloud
             top="16%"
             duration={90}
@@ -166,18 +179,39 @@ export function ServiceModal({
               </p>
             </div>
           ) : (
-            <form
-              onSubmit={handleSubmit}
-              className="space-y-5"
-            >
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {isBalloonOrder && (
+                <div>
+                  <label
+                    htmlFor="balloon-order-address"
+                    className="mb-2 block text-sm font-semibold"
+                  >
+                    Адрес доставки
+                  </label>
+
+                  <input
+                    id="balloon-order-address"
+                    name="address"
+                    type="text"
+                    autoComplete="street-address"
+                    placeholder="Улица, дом, квартира"
+                    required
+                    className="w-full rounded-2xl border border-border bg-background px-4 py-3 outline-none focus:border-primary"
+                  />
+                </div>
+              )}
 
               <div>
-                <label className="mb-2 flex items-center gap-2 text-sm font-semibold">
+                <label
+                  htmlFor="service-date"
+                  className="mb-2 flex items-center gap-2 text-sm font-semibold"
+                >
                   <Calendar className="size-4 text-primary" />
                   Дата праздника
                 </label>
 
                 <input
+                  id="service-date"
                   name="date"
                   type="date"
                   className="w-full rounded-2xl border border-border bg-background px-4 py-3"
@@ -185,19 +219,25 @@ export function ServiceModal({
               </div>
 
               <div>
-                <label className="mb-2 flex items-center gap-2 text-sm font-semibold">
+                <label
+                  htmlFor="service-phone"
+                  className="mb-2 flex items-center gap-2 text-sm font-semibold"
+                >
                   <Phone className="size-4 text-primary" />
                   Ваш телефон
                 </label>
 
                 <input
+                  id="service-phone"
                   name="phone"
                   required
                   type="tel"
                   maxLength={18}
                   placeholder="+7 (___) ___-__-__"
                   onInput={(e) => {
-                    e.currentTarget.value = formatPhone(e.currentTarget.value)
+                    e.currentTarget.value = formatPhone(
+                      e.currentTarget.value,
+                    )
                   }}
                   className="w-full rounded-2xl border border-border bg-background px-4 py-3 outline-none focus:border-primary"
                 />
@@ -205,7 +245,8 @@ export function ServiceModal({
 
               {error && (
                 <p className="rounded-2xl bg-destructive/10 px-4 py-3 text-center text-sm text-destructive">
-                  Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам напрямую.
+                  Не удалось отправить заявку. Попробуйте ещё раз или
+                  позвоните нам напрямую.
                 </p>
               )}
 
@@ -214,7 +255,11 @@ export function ServiceModal({
                 disabled={sending}
                 className="w-full rounded-full bg-primary py-4 font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {sending ? 'Отправляем…' : 'Узнать стоимость'}
+                {sending
+                  ? 'Отправляем…'
+                  : isBalloonOrder
+                    ? 'Заказать'
+                    : 'Узнать стоимость'}
               </button>
 
               <p className="text-center text-xs text-muted-foreground">
@@ -224,8 +269,8 @@ export function ServiceModal({
                   className="underline hover:text-primary"
                 >
                   политикой конфиденциальности
-                </Link>
-                {' '}и{' '}
+                </Link>{' '}
+                и{' '}
                 <Link
                   href="/consent"
                   className="underline hover:text-primary"
@@ -233,11 +278,11 @@ export function ServiceModal({
                   обработкой персональных данных
                 </Link>
               </p>
-
             </form>
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
