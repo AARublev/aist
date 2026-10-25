@@ -21,7 +21,7 @@ const nextConfig = {
 async redirects() {
   return [
     {
-      source: '/dekoratsii-i-oformlenie/:slug',
+      source: '/dekoratsii-i-oformlenie/:slug((?!.*\\.).*)',
       destination: '/fotozony/:slug',
       permanent: true,
     },
