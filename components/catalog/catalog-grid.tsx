@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ArrowUpDown, Gift, SearchX, SlidersHorizontal, X } from 'lucide-react'
 import {
   BALLOON_ITEMS,
+  BALLOON_PRICE_RANGES,
   CATEGORY_LABELS,
   COLOR_VARIANT_LABELS,
   ColorVariant,
@@ -87,6 +88,7 @@ export function CatalogGrid({
   const activeCategory = params.get('category') ?? 'all'
   const activePrice = params.get('price') ?? 'all'
   const activeColor = params.get('color') ?? 'all'
+  const activeGender = params.get('gender') ?? 'all'
   const sortParam = params.get('sort')
   const activeSort: SortOption = SORT_OPTIONS.includes(
     sortParam as SortOption,
@@ -113,7 +115,8 @@ export function CatalogGrid({
   )
   const extraFilterCount =
     (activePrice !== 'all' ? 1 : 0) +
-    (activeColor !== 'all' && activeType !== 'balloons' ? 1 : 0)
+    (activeColor !== 'all' && activeType !== 'balloons' ? 1 : 0) +
+    (activeGender !== 'all' ? 1 : 0)
   // Меняем фильтры, сохраняя остальные параметры URL.
   const setParam = (key: string, value: string) => {
     const next = new URLSearchParams(params.toString())
@@ -144,6 +147,7 @@ export function CatalogGrid({
     const next = new URLSearchParams(params.toString())
     next.delete('price')
     next.delete('color')
+    next.delete('gender')
     const query = next.toString()
     router.push(query ? `${pathname}?${query}` : pathname, {
       scroll: false,
@@ -164,8 +168,12 @@ export function CatalogGrid({
       document.body.style.overflow = previousOverflow
     }
   }, [filtersOpen])
+  const currentPriceRanges =
+    activeType === 'balloons'
+      ? BALLOON_PRICE_RANGES
+      : PRICE_RANGES
   const filtered = useMemo(() => {
-    const priceRange = PRICE_RANGES.find(
+    const priceRange = currentPriceRanges.find(
       (range) => range.id === activePrice,
     )
     return allItems.filter((item) => {
@@ -178,6 +186,25 @@ export function CatalogGrid({
         !item.categories.includes(activeCategory as DecorCategory)
       ) {
         return false
+      }
+
+      if (activeGender !== 'all') {
+        const itemGender = item.gender ?? []
+
+        if (activeGender === 'boy' && !itemGender.includes('boy')) {
+          return false
+        }
+
+        if (activeGender === 'girl' && !itemGender.includes('girl')) {
+          return false
+        }
+
+        if (
+          activeGender === 'neutral' &&
+          !(itemGender.includes('boy') && itemGender.includes('girl'))
+        ) {
+          return false
+        }
       }
       if (
         priceRange?.min !== undefined &&
@@ -202,12 +229,15 @@ export function CatalogGrid({
       }
       return true
     })
+
   }, [
     allItems,
     activeType,
     activeCategory,
     activePrice,
     activeColor,
+    activeGender,
+    currentPriceRanges,
   ])
   const sortedGroups = useMemo(
     () => sortGroups(groupItems(filtered), activeSort),
@@ -298,8 +328,8 @@ export function CatalogGrid({
                 aria-current={activeType === type ? 'page' : undefined}
                 aria-pressed={activeType === type}
                 className={`rounded-full px-5 py-3 text-sm font-semibold transition-all duration-200 sm:min-w-[120px] ${activeType === type
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-foreground hover:bg-white'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-foreground hover:bg-white'
                   }`}
               >
                 {label}
@@ -451,21 +481,21 @@ export function CatalogGrid({
                     onClick={() => setParam('price', 'all')}
                     aria-pressed={activePrice === 'all'}
                     className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${activePrice === 'all'
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-secondary text-foreground hover:bg-muted'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-secondary text-foreground hover:bg-muted'
                       }`}
                   >
                     Любая
                   </button>
-                  {PRICE_RANGES.map((range) => (
+                  {currentPriceRanges.map((range) => (
                     <button
                       key={range.id}
                       type="button"
                       onClick={() => setParam('price', range.id)}
                       aria-pressed={activePrice === range.id}
                       className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${activePrice === range.id
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-secondary text-foreground hover:bg-muted'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-secondary text-foreground hover:bg-muted'
                         }`}
                     >
                       {range.label}
@@ -485,8 +515,8 @@ export function CatalogGrid({
                       onClick={() => setParam('color', 'all')}
                       aria-pressed={activeColor === 'all'}
                       className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${activeColor === 'all'
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-secondary text-foreground hover:bg-muted'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-secondary text-foreground hover:bg-muted'
                         }`}
                     >
                       Любой
@@ -498,8 +528,8 @@ export function CatalogGrid({
                         onClick={() => setParam('color', variant)}
                         aria-pressed={activeColor === variant}
                         className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${activeColor === variant
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-secondary text-foreground hover:bg-muted'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-secondary text-foreground hover:bg-muted'
                           }`}
                       >
                         {COLOR_VARIANT_LABELS[variant]}
@@ -509,6 +539,35 @@ export function CatalogGrid({
                 </div>
               )}
             </div>
+
+            <div className="px-6">
+              <span className="mb-2 block text-sm font-semibold text-foreground">
+                Гендер
+              </span>
+
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { id: 'all', label: 'Любой' },
+                  { id: 'boy', label: 'Для мальчика' },
+                  { id: 'girl', label: 'Для девочки' },
+                  { id: 'neutral', label: 'Универсальные' },
+                ].map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => setParam('gender', option.id)}
+                    aria-pressed={activeGender === option.id}
+                    className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${activeGender === option.id
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-secondary text-foreground hover:bg-muted'
+                      }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="flex items-center justify-between gap-3 border-t border-border px-6 py-5">
               <button
                 type="button"

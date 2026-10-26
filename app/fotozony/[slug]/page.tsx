@@ -73,17 +73,68 @@ export default async function DecorDetailPage({
       candidate.colorVariant,
   )
 
-  // Похожие фотозоны для того же повода.
-  const similar = DECOR_ITEMS.filter(
-    (candidate) =>
-      (candidate.productType ?? 'photozone') === 'photozone' &&
-      candidate.slug !== item.slug &&
-      (!item.variantGroup ||
-        candidate.variantGroup !== item.variantGroup) &&
-      candidate.categories.some((category) =>
+
+  // Похожие фотозоны: ранжируем по степени сходства.
+  const similar = DECOR_ITEMS
+    .filter(
+      (candidate) =>
+        (candidate.productType ?? 'photozone') === 'photozone' &&
+        candidate.slug !== item.slug &&
+        (!item.variantGroup ||
+          candidate.variantGroup !== item.variantGroup),
+    )
+    .map((candidate, index) => {
+      let score = 0
+
+      // 1. Совпадение поводов и категорий
+      const commonCategories = candidate.categories.filter((category) =>
         item.categories.includes(category),
-      ),
-  ).slice(0, 3)
+      ).length
+
+      score += commonCategories * 5
+
+      // 2. Совпадение цветов
+      const commonColors = candidate.colors.filter((color) =>
+        item.colors.includes(color),
+      ).length
+
+      score += commonColors * 2
+
+      // 3. Совпадение тегов
+      const commonTags = candidate.tags.filter((tag) =>
+        item.tags.includes(tag),
+      ).length
+
+      score += commonTags * 2
+
+      // 4. Близость цены
+      const priceDifference =
+        Math.abs(candidate.priceFrom - item.priceFrom) /
+        Math.max(item.priceFrom, 1)
+
+      if (priceDifference <= 0.15) {
+        score += 4
+      } else if (priceDifference <= 0.3) {
+        score += 2
+      } else if (priceDifference <= 0.5) {
+        score += 1
+      }
+
+      // 5. Небольшой бонус популярным фотозонам
+      if (candidate.popular) {
+        score += 1
+      }
+
+      return {
+        item: candidate,
+        score,
+        index,
+      }
+    })
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .slice(0, 3)
+    .map((entry) => entry.item)
+
 
   const productUrl = `https://aist.life/fotozony/${item.slug}`
 
@@ -119,7 +170,7 @@ export default async function DecorDetailPage({
             aria-label="Хлебные крошки"
             className="text-sm text-muted-foreground"
           >
-            
+
             <Link
               href="/"
               className="hover:text-primary hover:underline"

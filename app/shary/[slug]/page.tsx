@@ -55,13 +55,74 @@ export default async function BalloonDetailPage({
 
   if (!item) notFound()
 
-  const similar = BALLOON_ITEMS.filter(
-    (other) =>
-      other.slug !== item.slug &&
-      other.categories.some((category) =>
+
+  const similar = BALLOON_ITEMS
+    .filter((other) => other.slug !== item.slug)
+    .map((other, index) => {
+      let score = 0
+
+      // 1. Совпадение повода и категории
+      const commonCategories = other.categories.filter((category) =>
         item.categories.includes(category),
-      ),
-  ).slice(0, 3)
+      ).length
+
+      score += commonCategories * 5
+
+      // 2. Совпадение гендера.
+      // Универсальные композиции подходят обеим категориям.
+      const itemGender = item.gender ?? []
+      const otherGender = other.gender ?? []
+
+      const genderMatches =
+        itemGender.length > 0 &&
+        otherGender.length > 0 &&
+        itemGender.some((gender) => otherGender.includes(gender))
+
+      if (genderMatches) {
+        score += 4
+      }
+
+      // 3. Совпадение цветов
+      const commonColors = other.colors.filter((color) =>
+        item.colors.includes(color),
+      ).length
+
+      score += commonColors * 2
+
+      // 4. Совпадение тегов
+      const commonTags = other.tags.filter((tag) =>
+        item.tags.includes(tag),
+      ).length
+
+      score += commonTags * 2
+
+      // 5. Близость цены
+      const priceDifference =
+        Math.abs(other.priceFrom - item.priceFrom) / item.priceFrom
+
+      if (priceDifference <= 0.15) {
+        score += 4
+      } else if (priceDifference <= 0.3) {
+        score += 2
+      } else if (priceDifference <= 0.5) {
+        score += 1
+      }
+
+      // 6. Небольшой бонус популярным композициям
+      if (other.popular) {
+        score += 1
+      }
+
+      return {
+        item: other,
+        score,
+        index,
+      }
+    })
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .slice(0, 3)
+    .map((entry) => entry.item)
+
 
   const productUrl = `https://aist.life/shary/${item.slug}`
 
@@ -97,7 +158,7 @@ export default async function BalloonDetailPage({
             aria-label="Хлебные крошки"
             className="text-sm text-muted-foreground"
           >
-            
+
             <Link
               href="/"
               className="hover:text-primary hover:underline"
