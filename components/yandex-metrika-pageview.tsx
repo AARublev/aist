@@ -1,10 +1,9 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 
-
-export function YandexMetrikaPageview() {
+function PageviewTracker() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const lastUrl = useRef<string | null>(null)
@@ -15,28 +14,28 @@ export function YandexMetrikaPageview() {
     const query = searchParams.toString()
     const url = `${window.location.origin}${pathname}${query ? `?${query}` : ''}`
 
+    // Первый просмотр уже учитывается при инициализации Метрики.
+    // Отправляем hit только при последующих переходах.
+    if (lastUrl.current === null) {
+      lastUrl.current = url
+      return
+    }
+
     if (lastUrl.current === url) return
     lastUrl.current = url
 
-    const sendHit = () => {
-      window.ym?.(110619987, 'hit', url, {
-        title: document.title,
-      })
-    }
-
-    if (window.ym) {
-      sendHit()
-    } else {
-      const handleReady = () => sendHit()
-      window.addEventListener('yandex-metrika-ready', handleReady, {
-        once: true,
-      })
-
-      return () => {
-        window.removeEventListener('yandex-metrika-ready', handleReady)
-      }
-    }
+    window.ym?.(110619987, 'hit', url, {
+      title: document.title,
+    })
   }, [pathname, searchParams])
 
   return null
+}
+
+export function YandexMetrikaPageview() {
+  return (
+    <Suspense fallback={null}>
+      <PageviewTracker />
+    </Suspense>
+  )
 }
