@@ -3,15 +3,6 @@
 import { useEffect, useRef } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 
-declare global {
-  interface Window {
-    ym?: (
-      counterId: number,
-      method: string,
-      ...args: unknown[]
-    ) => void
-  }
-}
 
 export function YandexMetrikaPageview() {
   const pathname = usePathname()
