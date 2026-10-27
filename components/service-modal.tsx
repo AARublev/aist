@@ -113,7 +113,12 @@ export function ServiceModal({
       }
 
       setSent(true)
-      window.ym?.(110619987, 'reachGoal', 'service_submit')
+
+      window.ym?.(
+        110619987,
+        'reachGoal',
+        isBalloonOrder ? 'balloon_order_submit' : 'service_submit',
+      )
     } catch {
       setError(true)
     } finally {

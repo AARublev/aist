@@ -1,4 +1,5 @@
 import { Analytics } from '@vercel/analytics/next'
+import { YandexMetrikaPageview } from '@/components/yandex-metrika-pageview'
 import type { Metadata, Viewport } from 'next'
 import '@fontsource-variable/comfortaa'
 import '@fontsource-variable/manrope'
@@ -89,7 +90,10 @@ export default function RootLayout({
                     for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
                     k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
                 })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110619987', 'ym');
-                ym(110619987, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+                ym(110619987, 'init', {defer: true, ssr: true, webvisor: true, clickmap: true, ecommerce: 'dataLayer', referrer: document.referrer, url: location.href, accurateTrackBounce: true, trackLinks: true,
+});
+
+window.dispatchEvent(new Event('yandex-metrika-ready'));
               `}
             </Script>
             <noscript>
@@ -103,6 +107,8 @@ export default function RootLayout({
             </noscript>
           </>
         )}
+
+        <YandexMetrikaPageview />
 
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
